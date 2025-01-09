@@ -1,0 +1,74 @@
+
+#define BLYNK_TEMPLATE_ID "TMPL3BLFUIgsY"
+#define BLYNK_TEMPLATE_NAME "iotproject"
+#define BLYNK_AUTH_TOKEN "EY5-WB8jIgVq_0seHEpmUw9u9qiF6poc"
+
+#define BLYNK_PRINT Serial
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+
+ 
+char auth[] = BLYNK_AUTH_TOKEN;    // You should get Auth Token in the Blynk App.
+char ssid[] = "project6340";                           // Your WiFi credentials.
+char pass[] = "123456789";
+ 
+
+int temp = D0;
+
+#define pir_human D4
+ 
+ 
+int alarm_status;
+int pir_status = 0;
+ 
+BlynkTimer timer;
+void setup()
+{
+  Serial.begin(9600);
+
+  Blynk.begin(auth, ssid, pass, "blynk.cloud", 80);
+ 
+  pinMode(pir_human, INPUT);
+ pinMode(temp, INPUT);
+
+ 
+
+  delay(100);
+}
+ 
+ 
+void loop()
+{
+  pir_status = digitalRead(pir_human);
+  alarm_status = digitalRead(temp);
+  
+  if (pir_status == 1)
+  {
+    WidgetLED LED(V0);
+    LED.on();
+    
+  }
+  else if (pir_status == 0)
+  {
+    
+    WidgetLED LED(V0);
+    LED.off();
+  }
+  
+  if (alarm_status == 0)
+  {
+    WidgetLED LED1(V1);
+    LED1.on();
+    
+  }
+  else if (alarm_status == 1)
+  {    
+    WidgetLED LED1(V1);
+    LED1.off();
+  }
+
+  delay(1000);
+  Blynk.run();
+  timer.run();
+ 
+}
